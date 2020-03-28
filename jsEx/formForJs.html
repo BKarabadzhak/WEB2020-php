@@ -5,7 +5,7 @@
     <script src="Form.js"></script>
 </head>
 <body>
-    <form action="register.php" onsubmit="return validate()" method="POST">
+    <form action="register.php" onsubmit="return /*validate()*/ false" method="POST">
         <label for="username">Потребителско име</label>
         <input type="text" id="username" name="username">
         <label id="invalidUsername"></label>
@@ -18,7 +18,7 @@
         <input type="text" id="confirm-password" name="confirm-password">
         <label id="invalidConfirmPassword"></label>
         <br>
-        <button>Submit</button>
+        <button type="button" onclick="validate()">Submit</button>
     </form>
 </body>
 </html>
