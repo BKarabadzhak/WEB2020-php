@@ -1,3 +1,5 @@
+const url = "./register.php"
+
 function validate() {
   let username = document.getElementById("username").value;
   let password = document.getElementById("password").value;
@@ -8,13 +10,13 @@ function validate() {
   let isValidConfirmPass = isValidConfirmPassword(confirmPassword, password);
 
   if (isValidUser) {
-    hideErrorMessag("invalidUsername");
+    hideNotification("invalidUsername");
   }
   if (isValidPass) {
-    hideErrorMessag("invalidPassword");
+    hideNotification("invalidPassword");
   }
   if (isValidConfirmPass) {
-    hideErrorMessag("invalidConfirmPassword");
+    hideNotification("invalidConfirmPassword");
   }
 
   return (isValidUser && isValidPass && isValidConfirmPass) ? request() : false;
@@ -25,19 +27,24 @@ function ajax(dataRequest) {
 
   xhr.open(dataRequest.method, dataRequest.url, true);
 
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+  xhr.onload = function() {
+    if (xhr.status === 200) {
       dataRequest.success(xhr.response);
     } else {
-      console.error(xhr.response);
+      dataRequest.error("Problems with response, try again.");
     }
   };
   
   xhr.send(dataRequest.data);
 }
 
-var callback = function(jsonText) {
+var successfulCallback = function(jsonText) {
+  hideNotification("notification");
   console.log(JSON.parse(jsonText)); 
+};
+
+var filedCallback = function(responseText) {
+  showNotification(responseText, "notification");
 };
 
 function request() {
@@ -54,15 +61,16 @@ function request() {
   var dataJSON = JSON.stringify(data);
   var dataRequest = {
     data: dataJSON,
-    url: "http://localhost/WEB2020-php/jsEx/register.php",
+    url: url,
     method: "POST",
-    success: callback
+    success: successfulCallback,
+    error: filedCallback
   }
   
   ajax(dataRequest);
 }
 
-function hideErrorMessag(elementName) {
+function hideNotification(elementName) {
   let invalidMessage = document.getElementById(elementName);
 
   if (invalidMessage.textContent !== "") {
@@ -73,7 +81,7 @@ function hideErrorMessag(elementName) {
 function isValidUsername(username) {
   let usernameRegex = /^[a-zA-z0-9_]{3,10}$/;
   if (!username.match(usernameRegex)) {
-    showErrorMessage("The username is invalid!", "invalidUsername");
+    showNotification("The username is invalid!", "invalidUsername");
     return false;
   }
   return true;
@@ -82,7 +90,7 @@ function isValidUsername(username) {
 function isValidPassword(password) {
   let passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9]{6,}$/;
   if (!password.match(passwordRegex)) {
-    showErrorMessage("The password is invalid!", "invalidPassword");
+    showNotification("The password is invalid!", "invalidPassword");
     return false;
   }
   return true;
@@ -90,7 +98,7 @@ function isValidPassword(password) {
 
 function isValidConfirmPassword(confirmPassword, password) {
   if (confirmPassword !== password) {
-    showErrorMessage(
+    showNotification(
       "The passwords should be the same!",
       "invalidConfirmPassword"
     );
@@ -99,7 +107,7 @@ function isValidConfirmPassword(confirmPassword, password) {
   return true;
 }
 
-function showErrorMessage(message, elementName) {
+function showNotification(message, elementName) {
   let invalidInput = document.getElementById(elementName);
   invalidInput.textContent = message;
   invalidInput.style.color = "red";
