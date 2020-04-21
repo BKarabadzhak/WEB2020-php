@@ -4,7 +4,6 @@ body {
 
 form {
     max-width: 300px;
-    height: 330px;
     margin: 0 auto; 
     border: 1px solid grey;
     padding: 0.1px 0;
@@ -21,23 +20,26 @@ form h3 {
 }
 
 form.fieldsStyle div{
-    max-width: auto;
-    margin: 10px auto;
+    padding: 0.1px 0;
+}
+
+form.fieldsStyle input, form.fieldsStyle button{
+    height: 25px;
 }
 
 form.fieldsStyle div input{
-    display: flex;
-    margin: 15px 25px;
+    margin: 10px 20px;
     padding-left: 7px;
+    max-width: 300;
     width: 250px;
-    height: 27px;
     font-size: 14px;
+    border: 1px solid gray;
 }
 
 form.fieldsStyle div button{
-    margin: 0px 25px 15px 25px;
-    height: 27px;
-    width: 250px;
+    margin: 10px 20px 15px 20px;
+    width: 248px;
+    box-sizing: content-box;
     text-align: center;
     color: white;
     background-color: rgb(9, 255, 0);
